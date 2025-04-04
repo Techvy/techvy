@@ -25,24 +25,16 @@ const About = () => {
           >
             <AboutText>
               <p>
-                Hello! I'm a passionate developer who specializes in creating innovative digital solutions. 
-                My journey in software development has led me to master a diverse range of technologies 
-                and create impactful applications that solve real-world problems.
+I specialize in creating custom software solutions that genuinely make a difference in your business. Whether you need engaging Discord bots to connect better with your community, comprehensive full-stack web applications to help your business grow, or reliable automation tools to simplify repetitive tasks—I’ve got you covered.
               </p>
               <p>
-                I excel in developing custom Discord bots that enhance server functionality and user 
-                engagement. From moderation tools to interactive game systems, I create bots that make 
-                Discord communities more dynamic and manageable.
+I believe good software is more than just code—it's about making things simple, efficient, and user-friendly. My goal is always to build clean, scalable solutions that perfectly match your specific needs. I'm comfortable working on both frontend and backend, meaning you'll get a well-rounded product built thoughtfully from start to finish.
               </p>
               <p>
-                In web development, I build full-stack applications that combine attractive frontend 
-                interfaces with robust backend systems. Whether it's a personal portfolio or a complex 
-                web application, I ensure each project is responsive, performant, and user-friendly.
+Need a responsive and attractive website to showcase your brand? Want an intelligent Discord bot that boosts engagement and interaction? Looking for automation tools to save valuable time and resources? I deliver practical solutions that focus directly on user experience and measurable results.
               </p>
               <p>
-                I also create automation tools that streamline workflows and increase productivity. 
-                By identifying repetitive tasks and developing efficient solutions, I help save time 
-                and reduce manual effort in various processes.
+In the world of software development, quality and practicality come first. I understand your goals and tailor each project specifically to achieve them effectively. Mediocre results aren't an option—I strive for excellence and ensure that the software I deliver adds real value to your business.
               </p>
             </AboutText>
           </motion.div>
