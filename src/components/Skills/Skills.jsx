@@ -54,15 +54,16 @@ const Skills = () => {
           >
             <OverviewText>
               <p>
-                I specialize in creating custom solutions across various domains of software development. 
-                From building interactive Discord bots and full-stack web applications to crafting efficient 
-                automation tools, I bring ideas to life with clean, scalable code.
+I'm not your average developer—I'm someone who genuinely understands the game and plays it well. My job isn't just writing code; it's about turning powerful ideas into real-world solutions that actually work. I don’t chase average—I chase excellence, and I deliver every single time.
+
+When it comes to Discord bots, I don’t do standard. Anyone can build basic bots, but what I create goes far beyond ordinary. Whether it's advanced moderation features or engaging games that keep users coming back, my bots make your server the place people actually want to be.
+
+On the web side, I build full-stack solutions that aren’t just functional—they're sleek, fast, and user-friendly. Whether it's your personal brand portfolio, a professional business website, or a complex web application, my projects always stand out because they perform better, look sharper, and simply deliver more.
+
+Automation isn't just a buzzword for me—it’s how I help businesses dominate their workflow. I pinpoint inefficiencies, eliminate repetitive tasks, and create powerful automation tools that drastically boost productivity and efficiency.
               </p>
               <p>
-                My expertise spans both frontend and backend development, allowing me to deliver 
-                complete solutions. Whether it's developing responsive websites, implementing bot 
-                functionalities, or automating repetitive tasks, I focus on creating practical, 
-                user-centric applications.
+Look, if average is your standard, I'm probably not your guy. But if you're looking for someone who delivers real quality, real solutions, and real results—then you've found exactly the developer you're looking for.
               </p>
             </OverviewText>
           </motion.div>
