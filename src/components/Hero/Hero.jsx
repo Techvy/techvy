@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
@@ -8,6 +8,134 @@ import { TypeAnimation } from 'react-type-animation';
 import toast, { Toaster } from 'react-hot-toast';
 
 const Hero = () => {
+  const canvasRef = useRef(null);
+  const heroImageRef = useRef(null);
+  const textContainerRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let particlesArray = [];
+    let hue = 250;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 5 + 1;
+        this.speedX = Math.random() * 3 - 1.5;
+        this.speedY = Math.random() * 3 - 1.5;
+        this.color = `hsl(${hue}, 100%, 50%)`;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.size > 0.2) this.size -= 0.05;
+      }
+
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const handleMouseMove = (event) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      
+      for (let i = 0; i < 2; i++) {
+        particlesArray.push(new Particle(x, y));
+      }
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+        
+        if (particlesArray[i].size <= 0.2) {
+          particlesArray.splice(i, 1);
+          i--;
+        }
+      }
+      
+      hue += 0.5;
+      if (hue > 360) hue = 0;
+      
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+    canvas.addEventListener('mousemove', handleMouseMove);
+    
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      canvas.removeEventListener('mousemove', handleMouseMove);
+    };
+
+    const heroImage = heroImageRef.current;
+    const textContainer = textContainerRef.current;
+    
+    if (heroImage && textContainer) {
+      const handleHeroMouseMove = (e) => {
+        const hero = e.currentTarget;
+        const rect = hero.getBoundingClientRect();
+        
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        
+        const maxRotation = 7;
+        const rotateY = maxRotation * (0.5 - x);
+        const rotateX = maxRotation * (y - 0.5);
+        
+        heroImage.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        
+        textContainer.style.transform = `perspective(1000px) rotateX(${-rotateX * 0.5}deg) rotateY(${-rotateY * 0.5}deg)`;
+      };
+      
+      const resetHeroTransform = () => {
+        heroImage.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        textContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+      };
+      
+      const heroSection = document.getElementById('hero');
+      if (heroSection) {
+        heroSection.addEventListener('mousemove', handleHeroMouseMove);
+        heroSection.addEventListener('mouseleave', resetHeroTransform);
+        
+        setTimeout(() => {
+          heroImage.style.transform = 'perspective(1000px) rotateX(2deg) rotateY(-3deg) scale(1.05)';
+          setTimeout(() => {
+            heroImage.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+          }, 800);
+        }, 500);
+        
+        return () => {
+          heroSection.removeEventListener('mousemove', handleHeroMouseMove);
+          heroSection.removeEventListener('mouseleave', resetHeroTransform);
+        };
+      }
+    }
+  }, []);
+
   const handleViewWork = (e) => {
     e.preventDefault();
     toast.custom((t) => (
@@ -45,7 +173,6 @@ const Hero = () => {
       },
     });
 
-    // Redirect after toast shows
     setTimeout(() => {
       window.open('https://discord.com/users/1250413029607084043/', '_blank');
     }, 1000);
@@ -53,6 +180,10 @@ const Hero = () => {
 
   return (
     <HeroSection id="hero">
+      <ParticleCanvas ref={canvasRef} />
+      <GlowAccent className="accent-1" />
+      <GlowAccent className="accent-2" />
+      <GlowAccent className="accent-3" />
       <Toaster
         containerStyle={{
           zIndex: 1000,
@@ -67,7 +198,7 @@ const Hero = () => {
       />
       <HeroContainer>
         <ContentContainer>
-          <TextContainer>
+          <TextContainer ref={textContainerRef}>
             <motion.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -173,15 +304,10 @@ const Hero = () => {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              <HeroImageWrapper>
+              <HeroImageWrapper ref={heroImageRef}>
                 <img src={profileImage} alt="Profile" />
               </HeroImageWrapper>
             </motion.div>
-            <BackgroundBlur
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.7 }}
-              transition={{ duration: 1, delay: 0.5 }}
-            />
           </ImageContainer>
         </ContentContainer>
       </HeroContainer>
@@ -224,6 +350,9 @@ const ContentContainer = styled.div`
 
 const TextContainer = styled.div`
   flex: 0 1 600px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  will-change: transform;
   
   span {
     display: block;
@@ -250,25 +379,18 @@ const TextContainer = styled.div`
   
   p {
     font-size: 1.1rem;
-    color: var(--text-secondary);
     margin-bottom: 2rem;
     max-width: 500px;
-    line-height: 1.6;
+    color: var(--text-secondary);
   }
   
   @media (max-width: 992px) {
-    margin-top: 2rem;
-    
-    h1 {
-      font-size: 2.5rem;
-    }
-    
-    h2 {
-      font-size: 1.5rem;
-    }
+    flex: 1;
+    text-align: center;
     
     p {
-      margin: 0 auto 2rem;
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 `;
@@ -401,43 +523,31 @@ const ImageContainer = styled.div`
 `;
 
 const HeroImageWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
   position: relative;
-  z-index: 3;
+  z-index: 2;
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
   overflow: hidden;
-  transition: transform 0.3s ease;
-  aspect-ratio: 1/1;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  height: 350px;
+  width: 350px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  will-change: transform;
+  transform-style: preserve-3d;
   
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center center;
-    display: block;
   }
   
-  &:hover {
-    transform: scale(1.05);
+  @media (max-width: 768px) {
+    height: 300px;
+    width: 300px;
   }
-`;
-
-const BackgroundBlur = styled(motion.div)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 500px;
-  height: 500px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(157, 78, 221, 0.4) 0%, rgba(157, 78, 221, 0) 70%);
-  filter: blur(60px);
-  z-index: 1;
   
-  @media (max-width: 992px) {
-    width: 400px;
-    height: 400px;
+  @media (max-width: 480px) {
+    height: 250px;
+    width: 250px;
   }
 `;
 
@@ -524,6 +634,84 @@ const ToastMessage = styled.p`
   color: var(--text-secondary);
   font-size: 0.9rem;
   margin: 4px 0 0;
+`;
+
+const ParticleCanvas = styled.canvas`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+`;
+
+const GlowAccent = styled.div`
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+  
+  &.accent-1 {
+    background: var(--primary-color);
+    width: 300px;
+    height: 300px;
+    top: 10%;
+    right: 5%;
+    animation: float-accent 12s ease-in-out infinite alternate;
+  }
+  
+  &.accent-2 {
+    background: var(--secondary-color);
+    width: 250px;
+    height: 250px;
+    bottom: 15%;
+    left: 10%;
+    animation: float-accent 15s ease-in-out infinite alternate-reverse;
+  }
+  
+  &.accent-3 {
+    background: var(--accent-color);
+    width: 200px;
+    height: 200px;
+    top: 30%;
+    left: 20%;
+    animation: float-accent 18s ease-in-out infinite alternate;
+  }
+  
+  @keyframes float-accent {
+    0% {
+      transform: translate(0, 0) scale(1);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translate(30px, 20px) scale(1.1);
+      opacity: 0.5;
+    }
+    100% {
+      transform: translate(10px, 40px) scale(0.9);
+      opacity: 0.4;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    &.accent-1 {
+      width: 200px;
+      height: 200px;
+    }
+    
+    &.accent-2 {
+      width: 180px;
+      height: 180px;
+    }
+    
+    &.accent-3 {
+      width: 150px;
+      height: 150px;
+    }
+  }
 `;
 
 export default Hero; 
