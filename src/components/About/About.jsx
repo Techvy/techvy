@@ -6,6 +6,9 @@ import profileImage from '../../assets/main.jpg';
 const About = () => {
   return (
     <AboutSection id="about">
+      <AccentCircle className="accent-circle-1" />
+      <AccentCircle className="accent-circle-2" />
+      
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -25,16 +28,13 @@ const About = () => {
           >
             <AboutText>
               <p>
-I specialize in creating custom software solutions that genuinely make a difference in your business. Whether you need engaging Discord bots to connect better with your community, comprehensive full-stack web applications to help your business grow, or reliable automation tools to simplify repetitive tasks—I’ve got you covered.
+I craft custom software that actually makes a difference—whether it's Discord bots that boost engagement, full-stack web apps to grow your business, or automation tools that cut out repetitive work.
               </p>
               <p>
-I believe good software is more than just code—it's about making things simple, efficient, and user-friendly. My goal is always to build clean, scalable solutions that perfectly match your specific needs. I'm comfortable working on both frontend and backend, meaning you'll get a well-rounded product built thoughtfully from start to finish.
+Great software isn't just about code—it's about simplicity, speed, and smart design. I handle both frontend and backend to deliver smooth, scalable solutions built around your exact needs.
               </p>
               <p>
-Need a responsive and attractive website to showcase your brand? Want an intelligent Discord bot that boosts engagement and interaction? Looking for automation tools to save valuable time and resources? I deliver practical solutions that focus directly on user experience and measurable results.
-              </p>
-              <p>
-In the world of software development, quality and practicality come first. I understand your goals and tailor each project specifically to achieve them effectively. Mediocre results aren't an option—I strive for excellence and ensure that the software I deliver adds real value to your business.
+Need a sleek site, an interactive bot, or tools that save time and money? I focus on results that matter—real value, not fluff. If you're after quality that performs, I'm your dev.
               </p>
             </AboutText>
           </motion.div>
@@ -77,6 +77,42 @@ In the world of software development, quality and practicality come first. I und
 const AboutSection = styled.section`
   padding: 100px 0;
   background-color: rgba(98, 0, 234, 0.03);
+  position: relative;
+  overflow: hidden;
+`;
+
+const AccentCircle = styled.div`
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  background: linear-gradient(45deg, var(--primary-color), var(--primary-hover));
+  filter: blur(60px);
+  z-index: 0;
+  
+  &.accent-circle-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -150px;
+    animation: float-slow 8s ease-in-out infinite alternate;
+  }
+  
+  &.accent-circle-2 {
+    width: 400px;
+    height: 400px;
+    bottom: -200px;
+    right: -200px;
+    animation: float-slow 10s ease-in-out infinite alternate-reverse;
+  }
+  
+  @keyframes float-slow {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(50px, 30px);
+    }
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -127,6 +163,8 @@ const AboutContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   margin-top: 2rem;
+  position: relative;
+  z-index: 2;
 `;
 
 const AboutContent = styled.div`
@@ -148,16 +186,67 @@ const AboutContent = styled.div`
 
 const AboutText = styled.div`
   margin-bottom: 2.5rem;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary-color), transparent);
+  }
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
   
   p {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
     color: var(--text-secondary);
-    line-height: 1.8;
+    line-height: 1.9;
     font-size: 1.1rem;
+    text-align: left;
     
     &:first-child {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       color: var(--text-accent);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+      font-weight: 500;
+      font-size: 1.15rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    
+    p {
+      font-size: 1rem;
+      
+      &:first-child {
+        font-size: 1.15rem;
+      }
+      
+      &:last-child {
+        font-size: 1.05rem;
+      }
     }
   }
   
