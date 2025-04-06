@@ -14,6 +14,12 @@ const GlobalStyles = createGlobalStyle`
     --background-light: #1A1625;
     --background-accent: #231C34;
     
+    /* Expanded Background Colors for Gradients */
+    --bg-gradient-1: rgba(147, 51, 234, 0.15);
+    --bg-gradient-2: rgba(124, 58, 237, 0.1);
+    --bg-gradient-3: rgba(168, 85, 247, 0.1);
+    --bg-gradient-4: rgba(216, 180, 254, 0.15);
+    
     /* Enhanced Text Colors */
     --text-primary: #F8F9FA;
     --text-secondary: #CED4DA;
@@ -90,7 +96,8 @@ const GlobalStyles = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
     position: relative;
     
-    &:before {
+    /* Gradient background */
+    &::before {
       content: '';
       position: fixed;
       top: 0;
@@ -98,40 +105,123 @@ const GlobalStyles = createGlobalStyle`
       width: 100%;
       height: 100%;
       background: 
-        radial-gradient(circle at 15% 15%, rgba(147, 51, 234, 0.08) 0%, transparent 35%),
-        radial-gradient(circle at 85% 85%, rgba(124, 58, 237, 0.08) 0%, transparent 45%),
-        radial-gradient(circle at 85% 15%, rgba(168, 85, 247, 0.08) 0%, transparent 35%),
-        radial-gradient(circle at 15% 85%, rgba(147, 51, 234, 0.08) 0%, transparent 40%);
-      animation: gradientAnimation 20s ease infinite alternate;
-      z-index: -1;
+        radial-gradient(ellipse at top left, var(--bg-gradient-1) 0%, transparent 50%),
+        radial-gradient(ellipse at top right, var(--bg-gradient-2) 0%, transparent 50%),
+        radial-gradient(ellipse at bottom left, var(--bg-gradient-3) 0%, transparent 50%),
+        radial-gradient(circle at bottom right, var(--bg-gradient-4) 0%, transparent 50%);
+      filter: blur(40px);
+      transform-origin: center;
+      animation: gradientAnimation 25s ease infinite alternate;
+      z-index: -2;
     }
 
-    &:after {
+    /* Pattern overlay */
+    &::after {
       content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background-image: 
+        linear-gradient(to bottom, rgba(15, 10, 26, 0.7) 0%, rgba(15, 10, 26, 0.8) 100%),
+        url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239333EA' fill-opacity='0.03'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239333EA' fill-opacity='0.05'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 1;
+      z-index: -1;
+      pointer-events: none;
+      animation: patternAnimation 60s linear infinite;
+    }
+    
+    /* Depth overlay - use a pseudo element on a different element */
+    .depth-overlay {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, 
+        rgba(15, 10, 26, 0) 0%, 
+        rgba(15, 10, 26, 0.3) 40%, 
+        rgba(15, 10, 26, 0) 60%, 
+        rgba(15, 10, 26, 0.3) 100%);
+      z-index: -1;
+      animation: depthAnimation 15s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    
+    /* Add animated stars/particles in the background */
+    .stars {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239333EA' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-      opacity: 0.4;
-      z-index: -1;
-      pointer-events: none;
+      z-index: -3;
+      overflow: hidden;
+    }
+    
+    .star {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+      opacity: 0;
+      animation: twinkle var(--star-duration) ease-in-out infinite;
+      animation-delay: var(--star-delay);
+    }
+  }
+
+  @keyframes patternAnimation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes depthAnimation {
+    0% {
+      opacity: 0.2;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 0.2;
     }
   }
 
   @keyframes gradientAnimation {
     0% {
-      transform: scale(1) rotate(0deg);
-      background-position: 0% 0%;
+      transform: scale(1) rotate(0deg) translate(0px, 0px);
+    }
+    25% {
+      transform: scale(1.05) rotate(0.5deg) translate(10px, 10px);
     }
     50% {
-      transform: scale(1.05) rotate(0.5deg);
-      background-position: 100% 100%;
+      transform: scale(1.1) rotate(1deg) translate(0px, 20px);
+    }
+    75% {
+      transform: scale(1.05) rotate(0.5deg) translate(-10px, 10px);
     }
     100% {
-      transform: scale(1) rotate(0deg);
-      background-position: 0% 0%;
+      transform: scale(1) rotate(0deg) translate(0px, 0px);
+    }
+  }
+
+  @keyframes twinkle {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    50% {
+      opacity: var(--star-opacity);
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.5);
     }
   }
 
@@ -328,6 +418,19 @@ const GlobalStyles = createGlobalStyle`
     background: var(--primary-color);
     color: white;
   }
+
+  /* Utility Classes */
+  .text-center { text-align: center; }
+  .text-right { text-align: right; }
+  .flex { display: flex; }
+  .flex-center { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .gap-sm { gap: var(--space-sm); }
+  .gap-md { gap: var(--space-md); }
+  .gap-lg { gap: var(--space-lg); }
 `;
 
 export default GlobalStyles; 
