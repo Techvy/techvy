@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-scroll';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import { FaBars, FaTimes, FaCode } from 'react-icons/fa';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
+  const [hoveredItem, setHoveredItem] = useState(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,7 +17,7 @@ const Header = () => {
         setScrolled(isScrolled);
       }
       
-      const sections = ['hero', 'about', 'skills'];
+      const sections = ['hero', 'about', 'skills', 'projects'];
       let currentSection = 'hero';
       
       sections.forEach(section => {
@@ -57,7 +58,10 @@ const Header = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <LogoText>&lt; Dev /&gt;</LogoText>
+          <LogoIcon>
+            <FaCode />
+          </LogoIcon>
+          <LogoText>Techvy</LogoText>
         </Logo>
 
         <MenuButton 
@@ -86,6 +90,8 @@ const Header = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
+                onMouseEnter={() => setHoveredItem(item.to)}
+                onMouseLeave={() => setHoveredItem(null)}
               >
                 <NavLink
                   to={item.to}
@@ -99,6 +105,9 @@ const Header = () => {
                   {item.name}
                   {activeSection === item.to && (
                     <ActiveIndicator layoutId="activeIndicator" />
+                  )}
+                  {hoveredItem === item.to && activeSection !== item.to && (
+                    <HoverIndicator layoutId="hoverIndicator" />
                   )}
                 </NavLink>
               </NavItem>
@@ -164,6 +173,27 @@ const Nav = styled.nav`
 const Logo = styled(motion.div)`
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+`;
+
+const LogoIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  border-radius: 8px;
+  color: white;
+  font-size: 1.5rem;
+  box-shadow: 0 0 15px rgba(157, 78, 221, 0.3);
+  transform: rotate(-10deg);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: rotate(0deg) scale(1.1);
+    box-shadow: 0 0 20px rgba(157, 78, 221, 0.5);
+  }
 `;
 
 const LogoText = styled.h1`
@@ -291,17 +321,33 @@ const ActiveIndicator = styled(motion.div)`
   box-shadow: 0 0 10px var(--primary-color);
 `;
 
+const HoverIndicator = styled(motion.div)`
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, var(--accent-color), var(--primary-color));
+  border-radius: 2px;
+  box-shadow: 0 0 8px var(--accent-color);
+  opacity: 0.7;
+`;
+
 const ContactButton = styled.button`
   background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
   color: white;
   border: none;
   padding: 0.5rem 1.2rem;
-  border-radius: 4px;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.15);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+  z-index: 5;
   
   &:before {
     content: '';
@@ -310,17 +356,40 @@ const ContactButton = styled.button`
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
     transition: all 0.6s;
+    z-index: -1;
+  }
+  
+  &:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -2;
   }
   
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(157, 78, 221, 0.4);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3), 0 0 15px rgba(56, 189, 248, 0.4);
     
     &:before {
       left: 100%;
     }
+    
+    &:after {
+      opacity: 1;
+    }
+  }
+  
+  &:active {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.2);
   }
   
   @media (max-width: 768px) {
