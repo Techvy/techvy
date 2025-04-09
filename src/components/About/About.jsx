@@ -6,6 +6,9 @@ import profileImage from '../../assets/main.jpg';
 const About = () => {
   return (
     <AboutSection id="about">
+      <AccentCircle className="accent-circle-1" />
+      <AccentCircle className="accent-circle-2" />
+      
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -25,24 +28,13 @@ const About = () => {
           >
             <AboutText>
               <p>
-                Hello! I'm a passionate developer who specializes in creating innovative digital solutions. 
-                My journey in software development has led me to master a diverse range of technologies 
-                and create impactful applications that solve real-world problems.
+I craft custom software that actually makes a difference—whether it's Discord bots that boost engagement, full-stack web apps to grow your business, or automation tools that cut out repetitive work.
               </p>
               <p>
-                I excel in developing custom Discord bots that enhance server functionality and user 
-                engagement. From moderation tools to interactive game systems, I create bots that make 
-                Discord communities more dynamic and manageable.
+Great software isn't just about code—it's about simplicity, speed, and smart design. I handle both frontend and backend to deliver smooth, scalable solutions built around your exact needs.
               </p>
               <p>
-                In web development, I build full-stack applications that combine attractive frontend 
-                interfaces with robust backend systems. Whether it's a personal portfolio or a complex 
-                web application, I ensure each project is responsive, performant, and user-friendly.
-              </p>
-              <p>
-                I also create automation tools that streamline workflows and increase productivity. 
-                By identifying repetitive tasks and developing efficient solutions, I help save time 
-                and reduce manual effort in various processes.
+Need a sleek site, an interactive bot, or tools that save time and money? I focus on results that matter—real value, not fluff. If you're after quality that performs, I'm your dev.
               </p>
             </AboutText>
           </motion.div>
@@ -85,6 +77,42 @@ const About = () => {
 const AboutSection = styled.section`
   padding: 100px 0;
   background-color: rgba(98, 0, 234, 0.03);
+  position: relative;
+  overflow: hidden;
+`;
+
+const AccentCircle = styled.div`
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  background: linear-gradient(45deg, var(--primary-color), var(--primary-hover));
+  filter: blur(60px);
+  z-index: 0;
+  
+  &.accent-circle-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    left: -150px;
+    animation: float-slow 8s ease-in-out infinite alternate;
+  }
+  
+  &.accent-circle-2 {
+    width: 400px;
+    height: 400px;
+    bottom: -200px;
+    right: -200px;
+    animation: float-slow 10s ease-in-out infinite alternate-reverse;
+  }
+  
+  @keyframes float-slow {
+    0% {
+      transform: translate(0, 0);
+    }
+    100% {
+      transform: translate(50px, 30px);
+    }
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -135,6 +163,8 @@ const AboutContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   margin-top: 2rem;
+  position: relative;
+  z-index: 2;
 `;
 
 const AboutContent = styled.div`
@@ -156,16 +186,67 @@ const AboutContent = styled.div`
 
 const AboutText = styled.div`
   margin-bottom: 2.5rem;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--primary-color), transparent);
+  }
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
   
   p {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
     color: var(--text-secondary);
-    line-height: 1.8;
+    line-height: 1.9;
     font-size: 1.1rem;
+    text-align: left;
     
     &:first-child {
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       color: var(--text-accent);
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+      font-weight: 500;
+      font-size: 1.15rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+      color: var(--primary-color);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+    
+    p {
+      font-size: 1rem;
+      
+      &:first-child {
+        font-size: 1.15rem;
+      }
+      
+      &:last-child {
+        font-size: 1.05rem;
+      }
     }
   }
   
@@ -238,29 +319,52 @@ const ResumeButton = styled.a`
   transition: var(--transition);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.15);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+  border: 2px solid transparent;
   
   &:before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.6s ease, height 0.6s ease;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: all 0.6s;
+    z-index: 1;
+  }
+  
+  &:after {
+    content: '📄';
+    font-size: 1.1rem;
+    margin-left: 0.5rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    display: inline-block;
   }
   
   &:hover {
     background: var(--secondary-color);
-    transform: translateY(-3px);
-    box-shadow: var(--box-shadow);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(59, 130, 246, 0.25), 0 0 15px rgba(59, 130, 246, 0.3);
+    padding-right: 2.5rem;
     
     &:before {
-      width: 300%;
-      height: 300%;
+      left: 100%;
     }
+    
+    &:after {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  &:active {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(59, 130, 246, 0.2);
   }
 `;
 
