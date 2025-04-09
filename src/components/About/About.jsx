@@ -319,29 +319,52 @@ const ResumeButton = styled.a`
   transition: var(--transition);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.15);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+  border: 2px solid transparent;
   
   &:before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.6s ease, height 0.6s ease;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: all 0.6s;
+    z-index: 1;
+  }
+  
+  &:after {
+    content: '📄';
+    font-size: 1.1rem;
+    margin-left: 0.5rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+    display: inline-block;
   }
   
   &:hover {
     background: var(--secondary-color);
-    transform: translateY(-3px);
-    box-shadow: var(--box-shadow);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 25px rgba(59, 130, 246, 0.25), 0 0 15px rgba(59, 130, 246, 0.3);
+    padding-right: 2.5rem;
     
     &:before {
-      width: 300%;
-      height: 300%;
+      left: 100%;
     }
+    
+    &:after {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  &:active {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 15px rgba(59, 130, 246, 0.2);
   }
 `;
 
