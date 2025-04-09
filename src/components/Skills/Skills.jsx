@@ -1,632 +1,930 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FaHtml5, FaCss3Alt, FaReact, FaJs, FaPython, FaArrowDown, FaNodeJs, FaGit } from 'react-icons/fa';
-import { SiNextdotjs, SiMongodb, SiFirebase, SiTailwindcss } from 'react-icons/si';
+import { Link } from 'react-scroll';
+import { FaGithub, FaDiscord, FaInstagram, FaCode } from 'react-icons/fa';
+import profileImage from '../../assets/main.jpg';
+import { TypeAnimation } from 'react-type-animation';
+import toast, { Toaster } from 'react-hot-toast';
 
-const Skills = () => {
-  const frontendSkills = [
-    { name: 'HTML5', icon: <FaHtml5 />, level: 95 },
-    { name: 'CSS3', icon: <FaCss3Alt />, level: 90 },
-    { name: 'JavaScript', icon: <FaJs />, level: 85 },
-    { name: 'React', icon: <FaReact />, level: 80 },
-    { name: 'Python', icon: <FaPython />, level: 85 },
-    { name: 'Next.js', icon: <SiNextdotjs />, level: 75 },
-  ];
-  
+// Add Google Font import
+const GoogleFontLink = () => (
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+);
+
+const Hero = () => {
+  const canvasRef = useRef(null);
+  const heroImageRef = useRef(null);
+  const textContainerRef = useRef(null);
+
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      const cards = document.querySelectorAll('.skill-item');
-      const overviewBox = document.querySelector('.overview-text');
-      const depth = 30;
-      
-      const xPos = (e.clientX / window.innerWidth - 0.5) * 2;
-      const yPos = (e.clientY / window.innerHeight - 0.5) * 2;
-      
-      cards.forEach((card, index) => {
-        const factor = (index % 3 + 1) * 0.5;
-        const xMove = xPos * depth * factor;
-        const yMove = yPos * depth * factor;
-        card.style.transform = `translate3d(${xMove}px, ${yMove}px, 0) scale(1.02)`;
-      });
-      
-      if (overviewBox) {
-        overviewBox.style.transform = `translate3d(${-xPos * 15}px, ${-yPos * 15}px, 0)`;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    let particlesArray = [];
+    let hue = 250;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 5 + 1;
+        this.speedX = Math.random() * 3 - 1.5;
+        this.speedY = Math.random() * 3 - 1.5;
+        this.color = `hsl(${hue}, 100%, 50%)`;
       }
-    };
-    
-    const resetPositions = () => {
-      const cards = document.querySelectorAll('.skill-item');
-      const overviewBox = document.querySelector('.overview-text');
-      
-      cards.forEach(card => {
-        card.style.transform = 'translate3d(0, 0, 0)';
-      });
-      
-      if (overviewBox) {
-        overviewBox.style.transform = 'translate3d(0, 0, 0)';
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.size > 0.2) this.size -= 0.05;
       }
-    };
-    
-    const skillSection = document.getElementById('skills');
-    
-    if (skillSection) {
-      skillSection.addEventListener('mousemove', handleMouseMove);
-      skillSection.addEventListener('mouseleave', resetPositions);
+
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
     }
+
+    const handleMouseMove = (event) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      
+      for (let i = 0; i < 2; i++) {
+        particlesArray.push(new Particle(x, y));
+      }
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+        
+        if (particlesArray[i].size <= 0.2) {
+          particlesArray.splice(i, 1);
+          i--;
+        }
+      }
+      
+      hue += 0.5;
+      if (hue > 360) hue = 0;
+      
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+    canvas.addEventListener('mousemove', handleMouseMove);
     
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    
+    window.addEventListener('resize', handleResize);
+
     return () => {
-      if (skillSection) {
-        skillSection.removeEventListener('mousemove', handleMouseMove);
-        skillSection.removeEventListener('mouseleave', resetPositions);
-      }
+      window.removeEventListener('resize', handleResize);
+      canvas.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
-  
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
+
+    const heroImage = heroImageRef.current;
+    const textContainer = textContainerRef.current;
+    
+    if (heroImage && textContainer) {
+      const handleHeroMouseMove = (e) => {
+        const hero = e.currentTarget;
+        const rect = hero.getBoundingClientRect();
+        
+        const x = (e.clientX - rect.left) / rect.width;
+        const y = (e.clientY - rect.top) / rect.height;
+        
+        const maxRotation = 7;
+        const rotateY = maxRotation * (0.5 - x);
+        const rotateX = maxRotation * (y - 0.5);
+        
+        heroImage.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        
+        textContainer.style.transform = `perspective(1000px) rotateX(${-rotateX * 0.5}deg) rotateY(${-rotateY * 0.5}deg)`;
+      };
+      
+      const resetHeroTransform = () => {
+        heroImage.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+        textContainer.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+      };
+      
+      const heroSection = document.getElementById('hero');
+      if (heroSection) {
+        heroSection.addEventListener('mousemove', handleHeroMouseMove);
+        heroSection.addEventListener('mouseleave', resetHeroTransform);
+        
+        setTimeout(() => {
+          heroImage.style.transform = 'perspective(1000px) rotateX(2deg) rotateY(-3deg) scale(1.05)';
+          setTimeout(() => {
+            heroImage.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+          }, 800);
+        }, 500);
+        
+        return () => {
+          heroSection.removeEventListener('mousemove', handleHeroMouseMove);
+          heroSection.removeEventListener('mouseleave', resetHeroTransform);
+        };
       }
     }
-  };
-  
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.4 }
-    }
+  }, []);
+
+  const handleViewWork = (e) => {
+    e.preventDefault();
+    toast.custom((t) => (
+      <CustomToast $visible={t.visible}>
+        <ToastIcon>🎨</ToastIcon>
+        <ToastContent>
+          <ToastTitle>Projects Section Coming Soon!</ToastTitle>
+          <ToastMessage>We're crafting something amazing for you to see.</ToastMessage>
+        </ToastContent>
+      </CustomToast>
+    ), {
+      duration: 2000,
+      position: 'top-center',
+      style: {
+        marginTop: '100px',
+      },
+    });
   };
 
-  const scrollToNextSection = () => {
-    const nextSection = document.getElementById('contact') || document.getElementById('portfolio');
-    if (nextSection) {
-      nextSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      window.scrollBy({
-        top: window.innerHeight,
-        behavior: 'smooth'
-      });
-    }
+  const handleContact = (e) => {
+    e.preventDefault();
+    toast.custom((t) => (
+      <CustomToast $visible={t.visible}>
+        <ToastIcon>💬</ToastIcon>
+        <ToastContent>
+          <ToastTitle>Redirecting to Discord</ToastTitle>
+          <ToastMessage>Taking you to my Discord profile...</ToastMessage>
+        </ToastContent>
+      </CustomToast>
+    ), {
+      duration: 2000,
+      position: 'top-center',
+      style: {
+        marginTop: '100px',
+      },
+    });
+
+    setTimeout(() => {
+      window.open('https://discord.com/users/1250413029607084043/', '_blank');
+    }, 1000);
   };
 
   return (
-    <SkillsSection id="skills">
-      <ParallaxItem className="parallax-bg-1" depth={20} />
-      <ParallaxItem className="parallax-bg-2" depth={40} />
-      <ParallaxItem className="parallax-bg-3" depth={15} />
-      
-      <FloatingIcon style={{ top: '15%', left: '10%', animationDelay: '1s', color: '#61DAFB', fontSize: '30px' }}>
-        <FaReact />
-      </FloatingIcon>
-      <FloatingIcon style={{ top: '25%', right: '15%', animationDelay: '2s', color: '#68A063', fontSize: '35px' }}>
-        <FaNodeJs />
-      </FloatingIcon>
-      <FloatingIcon style={{ top: '60%', left: '8%', animationDelay: '0s', color: '#4DB33D', fontSize: '28px' }}>
-        <SiMongodb />
-      </FloatingIcon>
-      <FloatingIcon style={{ top: '80%', right: '20%', animationDelay: '1.5s', color: '#F7DF1E', fontSize: '25px' }}>
-        <FaJs />
-      </FloatingIcon>
-      <FloatingIcon style={{ top: '35%', left: '25%', animationDelay: '0.5s', color: '#FFCA28', fontSize: '32px' }}>
-        <SiFirebase />
-      </FloatingIcon>
-      <FloatingIcon style={{ bottom: '20%', right: '12%', animationDelay: '2.5s', color: '#F05032', fontSize: '30px' }}>
-        <FaGit />
-      </FloatingIcon>
-      <FloatingIcon style={{ bottom: '35%', left: '18%', animationDelay: '1.8s', color: '#38B2AC', fontSize: '32px' }}>
-        <SiTailwindcss />
-      </FloatingIcon>
-      
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
-        <SectionTitle>My Skills</SectionTitle>
-      </motion.div>
-
-      <SkillsContainer>
-        <SkillsOverview>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <OverviewText className="overview-text">
-              <p>
-I'm not your average dev—I'm the one who actually gets the game and plays to win. I don't just write code; I build real solutions that work and hit hard. I don't chase "good enough." I chase great, and I deliver—every single time.
-              </p>
-              <p>
-Basic Discord bots? That's kid stuff. What I build? Advanced, engaging, and unforgettable. Whether it's next-level moderation or bots that make your server the place to be, I bring fire to the table.
-              </p>
-              <p>
-Web? Full-stack, end-to-end, clean, fast, and built to impress. Whether it's a sleek portfolio, a pro-grade business site, or a complex web app, I make it look good and run even better.
-              </p>
-              <p>
-Automation? That's my playground. I don't just automate—I obliterate inefficiencies. If your workflow's a mess, I'll turn it into a machine.
-              </p>
-              <p className="highlight-text">
-If you're cool with average, I'm not your guy. But if you want real quality, real results, and a dev who doesn't miss—then yeah, we should talk.
-              </p>
-            </OverviewText>
-          </motion.div>
-        </SkillsOverview>
-
-        <SkillsDetails>
-          <SkillCategory>
-            <motion.h3
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+    <HeroSection id="hero">
+      <GoogleFontLink />
+      <ParticleCanvas ref={canvasRef} />
+      <GlowAccent className="accent-1" />
+      <GlowAccent className="accent-2" />
+      <GlowAccent className="accent-3" />
+      <TopDecoration>
+        <CodeIcon>
+          <FaCode />
+        </CodeIcon>
+        <CodeIcon>
+          <FaCode />
+        </CodeIcon>
+        <CodeIcon>
+          <FaCode />
+        </CodeIcon>
+      </TopDecoration>
+      <Toaster
+        containerStyle={{
+          zIndex: 1000,
+          top: 0,
+        }}
+        toastOptions={{
+          style: {
+            background: 'transparent',
+            boxShadow: 'none',
+          },
+        }}
+      />
+      <HeroContainer>
+        <ContentContainer>
+          <TextContainer ref={textContainerRef}>
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
-              Development Skills
-            </motion.h3>
-            
-            <SkillsGrid
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
+              Hello, I'm
+            </motion.span>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="techvy-name"
             >
-              {frontendSkills.map((skill) => (
-                <SkillItem key={skill.name} variants={itemVariants} className="skill-item">
-                  <SkillIconContainer>
-                    {skill.icon}
-                  </SkillIconContainer>
-                  <SkillInfo>
-                    <SkillName>{skill.name}</SkillName>
-                    <SkillBar>
-                      <SkillProgress width={skill.level} />
-                    </SkillBar>
-                    <SkillDescription>
-                      {skill.name === 'Python' && 'Discord bots & Automation'}
-                      {skill.name === 'JavaScript' && 'Web & Bot Development'}
-                      {skill.name === 'React' && 'Frontend Applications'}
-                      {skill.name === 'Next.js' && 'Full-stack Development'}
-                      {skill.name === 'HTML5' && 'Structure & Semantics'}
-                      {skill.name === 'CSS3' && 'Styling & Animations'}
-                    </SkillDescription>
-                  </SkillInfo>
-                </SkillItem>
-              ))}
-            </SkillsGrid>
-          </SkillCategory>
-        </SkillsDetails>
-      </SkillsContainer>
-      
-      <ScrollButton onClick={scrollToNextSection}>
-        <FaArrowDown />
-      </ScrollButton>
-    </SkillsSection>
+              Techvy
+            </motion.h1>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              <TypeAnimation
+                sequence={[
+                  'Discord Bot Developer',
+                  2000,
+                  'Web Developer',
+                  2000,
+                  'Full Stack Developer',
+                  2000,
+                  'Automation Expert',
+                  2000
+                ]}
+                wrapper="span"
+                speed={50}
+                style={{ display: 'inline-block' }}
+                repeat={Infinity}
+              />
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            >
+              I build exceptional and accessible digital experiences for the web.
+            </motion.p>
+            <ButtonGroup>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                <PrimaryButton
+                  onClick={handleViewWork}
+                  style={{ cursor: 'pointer' }}
+                >
+                  View My Work
+                </PrimaryButton>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+              >
+                <SecondaryButton
+                  onClick={handleContact}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Contact Me
+                </SecondaryButton>
+              </motion.div>
+            </ButtonGroup>
+            <SocialContainer>
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.8 }}
+              >
+                <SocialLink href="https://github.com/techvy" target="_blank" rel="noopener noreferrer">
+                  <FaGithub />
+                </SocialLink>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 0.9 }}
+              >
+                <SocialLink href="https://discord.com/users/1250413029607084043/" target="_blank" rel="noopener noreferrer">
+                  <FaDiscord />
+                </SocialLink>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 1.0 }}
+              >
+                <SocialLink href="https://instagram.com/techvy_" target="_blank" rel="noopener noreferrer">
+                  <FaInstagram />
+                </SocialLink>
+              </motion.div>
+            </SocialContainer>
+          </TextContainer>
+          <ImageContainer>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+            >
+              <HeroImageWrapper ref={heroImageRef}>
+                <img src={profileImage} alt="Profile" />
+              </HeroImageWrapper>
+            </motion.div>
+          </ImageContainer>
+        </ContentContainer>
+      </HeroContainer>
+    </HeroSection>
   );
 };
 
-const ParallaxItem = styled.div`
-  position: absolute;
-  background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
-  opacity: 0.05;
-  border-radius: 50%;
-  z-index: 0;
-  filter: blur(40px);
-  
-  &.parallax-bg-1 {
-    width: 300px;
-    height: 300px;
-    top: 10%;
-    left: 5%;
-  }
-  
-  &.parallax-bg-2 {
-    width: 250px;
-    height: 250px;
-    bottom: 20%;
-    right: 10%;
-  }
-  
-  &.parallax-bg-3 {
-    width: 200px;
-    height: 200px;
-    top: 40%;
-    right: 20%;
-  }
-`;
-
-const SkillsSection = styled.section`
-  padding: 100px 0;
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 0.5rem;
-  color: var(--text-color);
+const HeroSection = styled.section`
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 0;
   position: relative;
-  display: inline-block;
-  left: 50%;
-  transform: translateX(-50%);
-  
-  &:after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: var(--primary-color);
-    transition: all 0.4s ease;
-    box-shadow: 0 0 8px var(--primary-color);
-  }
-  
-  &:hover {    
-    &:after {
-      width: 100%;
-      box-shadow: 
-        0 0 10px var(--primary-color),
-        0 0 20px var(--primary-color);
-    }
-  }
+  overflow: hidden;
 `;
 
-const SectionSubtitle = styled.p`
-  font-size: 1.1rem;
-  text-align: center;
-  color: var(--text-secondary);
-  margin-bottom: 3rem;
-`;
-
-const SkillsContainer = styled.div`
+const HeroContainer = styled.div`
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;
-  margin-top: 2rem;
-  background: var(--card-bg);
-  padding: 2.5rem;
-  border-radius: 20px;
-  border: 1px solid var(--border-color);
-  backdrop-filter: blur(10px);
-  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+`;
+
+const ContentContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
   
-  &:hover {
-    border-color: var(--primary-color);
-    box-shadow: var(--box-shadow);
+  @media (max-width: 992px) {
+    flex-direction: column-reverse;
+    text-align: center;
   }
 `;
 
-const SkillsOverview = styled.div`
-  margin-bottom: 3.5rem;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-`;
-
-const OverviewText = styled.div`
-  p {
-    margin-bottom: 1.5rem;
-    color: var(--text-secondary);
-    line-height: 1.8;
+const TextContainer = styled.div`
+  flex: 0 1 600px;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  will-change: transform;
+  
+  span {
+    display: block;
     font-size: 1.1rem;
-    text-align: left;
-    padding: 0 1rem;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  
+  h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    line-height: 1.2;
     
-    &:first-child {
-      font-size: 1.2rem;
-      color: var(--text-accent);
-      font-weight: 500;
-    }
-    
-    &:last-child {
-      font-weight: 700;
-      font-size: 1.15rem;
-      background: linear-gradient(90deg, #ff7b00, #ff2d95);
+    &.techvy-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      letter-spacing: 2px;
+      background: linear-gradient(
+        90deg,
+        var(--primary-color) 0%,
+        var(--accent-color) 50%,
+        var(--primary-color) 100%
+      );
+      background-size: 200% auto;
+      color: transparent;
       -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-fill-color: transparent;
-      letter-spacing: 0.02em;
-      text-shadow: 0 0 30px rgba(255, 45, 149, 0.3);
-      position: relative;
-      padding: 0.5rem 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      margin-top: 0.5rem;
-    }
-    
-    &.highlight-text {
-      font-weight: 700;
-      font-size: 1.15rem;
-      background: linear-gradient(90deg, #ff7b00, #ff2d95);
-      -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-fill-color: transparent;
-      letter-spacing: 0.02em;
-      text-shadow: 0 0 30px rgba(255, 45, 149, 0.3);
+      animation: shine 3s linear infinite;
+      text-shadow: 0 0 10px rgba(157, 78, 221, 0.3);
       position: relative;
-      padding: 0.5rem 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      margin-top: 0.5rem;
+      font-size: 3.5rem;
+      
+      @keyframes shine {
+        to {
+          background-position: 200% center;
+        }
+      }
     }
   }
   
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
-  padding: 2rem;
+  h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--secondary-color);
+  }
+  
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    max-width: 500px;
+    color: var(--text-secondary);
+  }
+  
+  @media (max-width: 992px) {
+    flex: 1;
+    text-align: center;
+    
+    p {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  
+  @media (max-width: 992px) {
+    justify-content: center;
+  }
+  
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 1rem;
+  }
+`;
+
+const PrimaryButton = styled.button`
+  display: inline-block;
+  padding: 0.8rem 1.8rem;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 2px solid transparent;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s;
+  }
+  
+  &:hover {
+    background: var(--secondary-color);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2), 0 0 15px rgba(59, 130, 246, 0.3);
+    
+    &:before {
+      left: 100%;
+    }
+  }
+  
+  &:active {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(59, 130, 246, 0.2);
+  }
+`;
+
+const SecondaryButton = styled.button`
+  display: inline-block;
+  padding: 0.8rem 1.8rem;
+  background: rgba(56, 189, 248, 0.05);
+  color: var(--accent-color);
+  border: 2px solid var(--accent-color);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(56, 189, 248, 0.05);
+  backdrop-filter: blur(5px);
+  letter-spacing: 0.5px;
   
   &:before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      rgba(56, 189, 248, 0.1), 
+      rgba(56, 189, 248, 0.2)
+    );
+    transition: width 0.4s ease;
+    z-index: -1;
   }
   
   &:hover {
+    color: white;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
     transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 20px rgba(56, 189, 248, 0.15), 0 0 15px rgba(56, 189, 248, 0.2);
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    
+    &:before {
+      width: 100%;
+    }
   }
   
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-    
-    p {
-      font-size: 1rem;
-      padding: 0;
-      
-      &:first-child {
-        font-size: 1.1rem;
-      }
-    }
+  &:active {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(56, 189, 248, 0.15);
   }
 `;
 
-const SkillsDetails = styled.div`
+const SocialContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: 3rem;
-`;
-
-const SkillCategory = styled.div`
-  h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    color: var(--text-color);
-    position: relative;
-    display: inline-block;
-    padding-bottom: 0.5rem;
-    
-    &:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 40px;
-      height: 2px;
-      background: var(--primary-color);
-      transition: all 0.4s ease;
-      box-shadow: 0 0 8px var(--primary-color);
-    }
-
-    &:hover {    
-      &:after {
-        width: 100%;
-        box-shadow: 
-          0 0 10px var(--primary-color),
-          0 0 20px var(--primary-color);
-      }
-    }
-  }
-`;
-
-const SkillsGrid = styled(motion.div)`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 1.2rem;
   
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+  @media (max-width: 992px) {
+    justify-content: center;
   }
 `;
 
-const SkillIconContainer = styled.div`
+const SocialLink = styled.a`
   display: flex;
+  align-items: center;
   justify-content: center;
-  align-items: center;
-  min-width: 60px;
-  height: 60px;
-  font-size: 2.2rem;
-  color: var(--primary-color);
-  background: var(--hover-color);
-  border-radius: 12px;
-  transition: var(--transition);
-`;
-
-const SkillItem = styled(motion.div)`
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  border-radius: 12px;
-  background: var(--background-accent);
-  transition: var(--transition);
-  border: 1px solid transparent;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(157, 78, 221, 0.1);
+  border-radius: 50%;
+  color: var(--accent-color);
+  font-size: 1.2rem;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   
+  &:before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--primary-color);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -1;
+  }
+
   &:hover {
+    background-color: var(--primary-color);
+    color: white;
     transform: translateY(-5px);
-    border-color: var(--primary-color);
-    box-shadow: var(--box-shadow);
-    
-    ${SkillIconContainer} {
-      transform: scale(1.1);
-      color: var(--primary-light);
+    box-shadow: 0 0 20px var(--primary-color),
+                0 0 35px var(--primary-color),
+                0 0 50px rgba(157, 78, 221, 0.3);
+
+    &:before {
+      opacity: 0.5;
+      transform: scale(1.5);
     }
+  }
+
+  svg {
+    filter: drop-shadow(0 0 8px currentColor);
+    transition: all 0.3s ease;
+  }
+
+  &:hover svg {
+    filter: drop-shadow(0 0 12px white);
+    transform: scale(1.1);
   }
 `;
 
-const SkillInfo = styled.div`
-  flex: 1;
-`;
-
-const SkillName = styled.div`
-  font-weight: 600;
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  color: var(--text-accent);
-`;
-
-const SkillBar = styled.div`
-  width: 100%;
-  height: 8px;
-  background-color: var(--hover-color);
-  border-radius: 4px;
-  overflow: hidden;
-  margin-bottom: 0.75rem;
-`;
-
-const SkillProgress = styled.div`
-  height: 100%;
-  width: ${props => props.width}%;
-  background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-  border-radius: 4px;
+const ImageContainer = styled.div`
+  flex: 0 1 400px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
   position: relative;
+  height: 400px;
+  margin-left: auto;
   
-  &:after {
+  @media (max-width: 992px) {
+    width: 100%;
+    margin-bottom: 2rem;
+    height: 350px;
+    justify-content: center;
+  }
+`;
+
+const HeroImageWrapper = styled.div`
+  position: relative;
+  z-index: 2;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  overflow: hidden;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.15),
+    0 0 20px rgba(157, 78, 221, 0.2),
+    inset 0 0 20px rgba(157, 78, 221, 0.1);
+  height: 350px;
+  width: 350px;
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  will-change: transform;
+  transform-style: preserve-3d;
+  animation: morphing 8s ease-in-out infinite;
+  
+  &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.2),
-      transparent
+      45deg,
+      rgba(157, 78, 221, 0.1),
+      rgba(100, 108, 255, 0.1)
     );
-    animation: shimmer 2s infinite;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
   }
-  
-  @keyframes shimmer {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
-  }
-`;
-
-const SkillDescription = styled.div`
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-  line-height: 1.5;
-`;
-
-const ScrollButton = styled.div`
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background: rgba(0, 0, 0, 0.2);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: var(--primary-color);
-  font-size: 1.5rem;
-  cursor: pointer;
-  z-index: 100;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  animation: float 2s ease-in-out infinite;
   
   &:hover {
-    transform: translateY(-5px);
-    background: rgba(0, 0, 0, 0.3);
-    color: #ff7b00;
-    box-shadow: 0 8px 30px rgba(255, 123, 0, 0.3);
-    animation: float 2s ease-in-out infinite, glow 1.5s ease-in-out infinite;
+    border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+    transform: scale(1.02) translateY(-5px);
+    box-shadow: 
+      0 15px 35px rgba(0, 0, 0, 0.2),
+      0 0 30px rgba(157, 78, 221, 0.3),
+      inset 0 0 25px rgba(157, 78, 221, 0.2);
   }
   
-  @keyframes float {
+  &:hover::before {
+    opacity: 1;
+  }
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    filter: contrast(1.1) brightness(1.05);
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+    filter: contrast(1.15) brightness(1.1);
+  }
+  
+  @keyframes morphing {
     0% {
-      transform: translateY(0px);
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
     }
     50% {
-      transform: translateY(10px);
+      border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
     }
     100% {
-      transform: translateY(0px);
-    }
-  }
-  
-  @keyframes glow {
-    0% {
-      box-shadow: 0 0 5px rgba(255, 123, 0, 0.3), 0 0 10px rgba(255, 123, 0, 0.2);
-    }
-    50% {
-      box-shadow: 0 0 20px rgba(255, 123, 0, 0.6), 0 0 30px rgba(255, 123, 0, 0.4);
-    }
-    100% {
-      box-shadow: 0 0 5px rgba(255, 123, 0, 0.3), 0 0 10px rgba(255, 123, 0, 0.2);
-    }
-  }
-  
-  svg {
-    animation: bounce 2s infinite;
-  }
-  
-  @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
-      transform: translateY(0);
-    }
-    40% {
-      transform: translateY(-8px);
-    }
-    60% {
-      transform: translateY(-4px);
-    }
-  }
-`;
-
-const FloatingIcon = styled.div`
-  position: absolute;
-  z-index: 1;
-  opacity: 0.2;
-  filter: drop-shadow(0 0 10px currentColor);
-  animation: floatIcon 6s ease-in-out infinite;
-  pointer-events: none;
-  
-  @keyframes floatIcon {
-    0% {
-      transform: translateY(0) rotate(0deg);
-    }
-    50% {
-      transform: translateY(-20px) rotate(10deg);
-    }
-    100% {
-      transform: translateY(0) rotate(0deg);
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
     }
   }
   
   @media (max-width: 768px) {
-    display: none;
+    height: 300px;
+    width: 300px;
+  }
+  
+  @media (max-width: 480px) {
+    height: 250px;
+    width: 250px;
   }
 `;
 
-export default Skills; 
+const HeroText = styled.div`
+  text-align: left;
+  
+  h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(
+      45deg,
+      var(--text-color) 30%,
+      var(--primary-color) 50%,
+      var(--text-color) 70%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% auto;
+    animation: shine 5s linear infinite;
+    
+    @keyframes shine {
+      to {
+        background-position: 200% center;
+      }
+    }
+  }
+  
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+  }
+`;
+
+const HeroDescription = styled.p`
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  max-width: 500px;
+  line-height: 1.6;
+`;
+
+const CustomToast = styled(motion.div)`
+  padding: 16px 20px;
+  background: rgba(157, 78, 221, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--primary-color);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 32px rgba(157, 78, 221, 0.2);
+  opacity: ${props => props.$visible ? 1 : 0};
+  transform: ${props => props.$visible ? 'translateY(0)' : 'translateY(-20px)'};
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1000;
+  margin-top: 1rem;
+`;
+
+const ToastIcon = styled.span`
+  font-size: 24px;
+  animation: bounce 1s infinite;
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+`;
+
+const ToastContent = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const ToastTitle = styled.h3`
+  color: var(--primary-color);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+`;
+
+const ToastMessage = styled.p`
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 4px 0 0;
+`;
+
+const ParticleCanvas = styled.canvas`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+`;
+
+const GlowAccent = styled.div`
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.5;
+  z-index: 0;
+  pointer-events: none;
+  
+  &.accent-1 {
+    background: var(--primary-color);
+    width: 300px;
+    height: 300px;
+    top: 10%;
+    right: 5%;
+    animation: float-accent 12s ease-in-out infinite alternate;
+  }
+  
+  &.accent-2 {
+    background: var(--secondary-color);
+    width: 250px;
+    height: 250px;
+    bottom: 15%;
+    left: 10%;
+    animation: float-accent 15s ease-in-out infinite alternate-reverse;
+  }
+  
+  &.accent-3 {
+    background: var(--accent-color);
+    width: 200px;
+    height: 200px;
+    top: 30%;
+    left: 20%;
+    animation: float-accent 18s ease-in-out infinite alternate;
+  }
+  
+  @keyframes float-accent {
+    0% {
+      transform: translate(0, 0) scale(1);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translate(30px, 20px) scale(1.1);
+      opacity: 0.5;
+    }
+    100% {
+      transform: translate(10px, 40px) scale(0.9);
+      opacity: 0.4;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    &.accent-1 {
+      width: 200px;
+      height: 200px;
+    }
+    
+    &.accent-2 {
+      width: 180px;
+      height: 180px;
+    }
+    
+    &.accent-3 {
+      width: 150px;
+      height: 150px;
+    }
+  }
+`;
+
+const TopDecoration = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+`;
+
+const CodeIcon = styled.div`
+  position: absolute;
+  font-size: 4rem;
+  color: rgba(157, 78, 221, 0.1);
+  animation: float 8s infinite;
+  
+  &:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+    font-size: 3rem;
+  }
+  
+  &:nth-child(2) {
+    top: 20%;
+    right: 15%;
+    animation-delay: 2s;
+    font-size: 5rem;
+  }
+  
+  &:nth-child(3) {
+    bottom: 15%;
+    left: 20%;
+    animation-delay: 4s;
+    font-size: 4rem;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 0.1;
+    }
+    50% {
+      transform: translate(20px, 20px) rotate(10deg);
+      opacity: 0.2;
+    }
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 0.1;
+    }
+  }
+`;
+
+export default Hero; 
