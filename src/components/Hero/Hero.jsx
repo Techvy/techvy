@@ -2,10 +2,18 @@ import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
-import { FaGithub, FaDiscord, FaInstagram } from 'react-icons/fa';
+import { FaGithub, FaDiscord, FaInstagram, FaCode } from 'react-icons/fa';
 import profileImage from '../../assets/main.jpg';
 import { TypeAnimation } from 'react-type-animation';
 import toast, { Toaster } from 'react-hot-toast';
+
+// Add Google Font import
+const GoogleFontLink = () => (
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Syncopate:wght@400;700&display=swap"
+    rel="stylesheet"
+  />
+);
 
 const Hero = () => {
   const canvasRef = useRef(null);
@@ -180,10 +188,22 @@ const Hero = () => {
 
   return (
     <HeroSection id="hero">
+      <GoogleFontLink />
       <ParticleCanvas ref={canvasRef} />
       <GlowAccent className="accent-1" />
       <GlowAccent className="accent-2" />
       <GlowAccent className="accent-3" />
+      <TopDecoration>
+        <CodeIcon>
+          <FaCode />
+        </CodeIcon>
+        <CodeIcon>
+          <FaCode />
+        </CodeIcon>
+        <CodeIcon>
+          <FaCode />
+        </CodeIcon>
+      </TopDecoration>
       <Toaster
         containerStyle={{
           zIndex: 1000,
@@ -210,6 +230,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
+              className="techvy-name"
             >
               Techvy
             </motion.h1>
@@ -320,7 +341,7 @@ const HeroSection = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 80px;
+  padding-top: 0;
   position: relative;
   overflow: hidden;
 `;
@@ -368,6 +389,33 @@ const TextContainer = styled.div`
     margin-bottom: 0.5rem;
     color: var(--text-color);
     line-height: 1.2;
+    
+    &.techvy-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      letter-spacing: 2px;
+      background: linear-gradient(
+        90deg,
+        var(--primary-color) 0%,
+        var(--accent-color) 50%,
+        var(--primary-color) 100%
+      );
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite;
+      text-shadow: 0 0 10px rgba(157, 78, 221, 0.3);
+      position: relative;
+      font-size: 3.5rem;
+      
+      @keyframes shine {
+        to {
+          background-position: 200% center;
+        }
+      }
+    }
   }
   
   h2 {
@@ -415,33 +463,91 @@ const PrimaryButton = styled.button`
   padding: 0.8rem 1.8rem;
   background: var(--primary-color);
   color: white;
-  border-radius: 4px;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.5px;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: all 0.6s;
+  }
   
   &:hover {
     background: var(--secondary-color);
-    transform: translateY(-3px);
-    box-shadow: var(--box-shadow);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2), 0 0 15px rgba(59, 130, 246, 0.3);
+    
+    &:before {
+      left: 100%;
+    }
+  }
+  
+  &:active {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(59, 130, 246, 0.2);
   }
 `;
 
 const SecondaryButton = styled.button`
   display: inline-block;
   padding: 0.8rem 1.8rem;
-  background: transparent;
+  background: rgba(56, 189, 248, 0.05);
   color: var(--accent-color);
   border: 2px solid var(--accent-color);
-  border-radius: 4px;
+  border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(56, 189, 248, 0.05);
+  backdrop-filter: blur(5px);
+  letter-spacing: 0.5px;
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      rgba(56, 189, 248, 0.1), 
+      rgba(56, 189, 248, 0.2)
+    );
+    transition: width 0.4s ease;
+    z-index: -1;
+  }
   
   &:hover {
-    background: rgba(157, 78, 221, 0.1);
-    transform: translateY(-3px);
-    box-shadow: var(--box-shadow);
+    color: white;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(56, 189, 248, 0.15), 0 0 15px rgba(56, 189, 248, 0.2);
+    border-color: transparent;
+    background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    
+    &:before {
+      width: 100%;
+    }
+  }
+  
+  &:active {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(56, 189, 248, 0.15);
   }
 `;
 
@@ -525,19 +631,72 @@ const ImageContainer = styled.div`
 const HeroImageWrapper = styled.div`
   position: relative;
   z-index: 2;
-  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.15),
+    0 0 20px rgba(157, 78, 221, 0.2),
+    inset 0 0 20px rgba(157, 78, 221, 0.1);
   height: 350px;
   width: 350px;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   will-change: transform;
   transform-style: preserve-3d;
+  animation: morphing 8s ease-in-out infinite;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      45deg,
+      rgba(157, 78, 221, 0.1),
+      rgba(100, 108, 255, 0.1)
+    );
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  &:hover {
+    border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+    transform: scale(1.02) translateY(-5px);
+    box-shadow: 
+      0 15px 35px rgba(0, 0, 0, 0.2),
+      0 0 30px rgba(157, 78, 221, 0.3),
+      inset 0 0 25px rgba(157, 78, 221, 0.2);
+  }
+  
+  &:hover::before {
+    opacity: 1;
+  }
   
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+    filter: contrast(1.1) brightness(1.05);
+  }
+  
+  &:hover img {
+    transform: scale(1.05);
+    filter: contrast(1.15) brightness(1.1);
+  }
+  
+  @keyframes morphing {
+    0% {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    50% {
+      border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+    }
+    100% {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
   }
   
   @media (max-width: 768px) {
@@ -710,6 +869,60 @@ const GlowAccent = styled.div`
     &.accent-3 {
       width: 150px;
       height: 150px;
+    }
+  }
+`;
+
+const TopDecoration = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+`;
+
+const CodeIcon = styled.div`
+  position: absolute;
+  font-size: 4rem;
+  color: rgba(157, 78, 221, 0.1);
+  animation: float 8s infinite;
+  
+  &:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+    font-size: 3rem;
+  }
+  
+  &:nth-child(2) {
+    top: 20%;
+    right: 15%;
+    animation-delay: 2s;
+    font-size: 5rem;
+  }
+  
+  &:nth-child(3) {
+    bottom: 15%;
+    left: 20%;
+    animation-delay: 4s;
+    font-size: 4rem;
+  }
+  
+  @keyframes float {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 0.1;
+    }
+    50% {
+      transform: translate(20px, 20px) rotate(10deg);
+      opacity: 0.2;
+    }
+    100% {
+      transform: translate(0, 0) rotate(0deg);
+      opacity: 0.1;
     }
   }
 `;
