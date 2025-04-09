@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Header from './components/Header';
 import Hero from './components/Hero/Hero';
 import About from './components/About/About';
 import Skills from './components/Skills/Skills';
@@ -91,7 +90,6 @@ function App() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Header />
             <Hero />
             <About />
             <Skills />
