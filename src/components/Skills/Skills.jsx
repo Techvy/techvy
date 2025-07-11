@@ -660,7 +660,7 @@ const SkillIconContainer = styled.div`
   height: 70px;
   font-size: 2.5rem;
   border-radius: 16px;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: none;
   position: relative;
   overflow: hidden;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
