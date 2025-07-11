@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  base: '/techvy/',
+  base: '/portfolio/',
   plugins: [
     react({
       babel: {
@@ -16,10 +16,10 @@ export default defineConfig({
     })
   ],
   server: {
-    host: true,
+    host: true, 
     port: 5173,
     allowedHosts: [
-      '9f5b-152-58-85-179.ngrok-free.app'
+      'aa5ea45fb4d9.ngrok-free.app'
     ]
   },
   build: {
