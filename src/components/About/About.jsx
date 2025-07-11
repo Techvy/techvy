@@ -177,11 +177,6 @@ const AboutContent = styled.div`
   border: 1px solid var(--border-color);
   backdrop-filter: blur(10px);
   transition: var(--transition);
-  
-  &:hover {
-    border-color: var(--primary-color);
-    box-shadow: var(--box-shadow);
-  }
 `;
 
 const AboutText = styled.div`
@@ -202,12 +197,6 @@ const AboutText = styled.div`
     width: 4px;
     height: 100%;
     background: linear-gradient(to bottom, var(--primary-color), transparent);
-  }
-  
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-    border-color: rgba(255, 255, 255, 0.1);
   }
   
   p {
@@ -282,12 +271,6 @@ const StatItem = styled.div`
   min-width: 180px;
   transition: var(--transition);
   
-  &:hover {
-    transform: translateY(-5px);
-    background: var(--background-accent);
-    box-shadow: var(--box-shadow);
-  }
-  
   @media (max-width: 992px) {
     min-width: 150px;
   }
@@ -309,62 +292,28 @@ const StatLabel = styled.div`
 
 const ResumeButton = styled.a`
   display: inline-block;
-  padding: 1rem 2rem;
-  background: var(--primary-color);
-  color: white;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1.1rem;
+  padding: 0.85rem 2.2rem;
+  background: linear-gradient(90deg, #2563eb 0%, #1e293b 100%);
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.08rem;
   cursor: pointer;
-  transition: var(--transition);
+  border: none;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.13);
+  letter-spacing: 0.7px;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 6px 12px rgba(59, 130, 246, 0.15);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  letter-spacing: 0.5px;
-  border: 2px solid transparent;
-  
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: all 0.6s;
-    z-index: 1;
-  }
-  
-  &:after {
-    content: '📄';
-    font-size: 1.1rem;
-    margin-left: 0.5rem;
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: all 0.3s ease;
-    display: inline-block;
-  }
-  
+
   &:hover {
-    background: var(--secondary-color);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 25px rgba(59, 130, 246, 0.25), 0 0 15px rgba(59, 130, 246, 0.3);
-    padding-right: 2.5rem;
-    
-    &:before {
-      left: 100%;
-    }
-    
-    &:after {
-      opacity: 1;
-      transform: translateX(0);
-    }
+    background: linear-gradient(90deg, #1e293b 0%, #2563eb 100%);
+    color: #fff;
+    box-shadow: 0 6px 24px rgba(37, 99, 235, 0.18);
   }
-  
+
   &:active {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 15px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
   }
 `;
 
