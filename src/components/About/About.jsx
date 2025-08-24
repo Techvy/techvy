@@ -28,13 +28,10 @@ const About = () => {
           >
             <AboutText>
               <p>
-I craft custom software that actually makes a difference—whether it's Discord bots that boost engagement, full-stack web apps to grow your business, or automation tools that cut out repetitive work.
+I make websites and Discord bots that actually do what you need them to. From smooth, responsive sites to bots that make servers run better, I keep things simple and focus on building stuff people enjoy using.
               </p>
               <p>
-Great software isn't just about code—it's about simplicity, speed, and smart design. I handle both frontend and backend to deliver smooth, scalable solutions built around your exact needs.
-              </p>
-              <p>
-Need a sleek site, an interactive bot, or tools that save time and money? I focus on results that matter—real value, not fluff. If you're after quality that performs, I'm your dev.
+I care more about results than buzzwords. That means websites that load fast, bots that make sense, and tools that actually help your community or business grow.
               </p>
             </AboutText>
           </motion.div>
