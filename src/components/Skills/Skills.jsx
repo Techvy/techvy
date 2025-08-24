@@ -141,7 +141,7 @@ const Skills = () => {
                 className="reveal-bar"
               ></motion.div>
               <p>
-                <span className="highlight">As a developer</span>, I'm not your average dev—I'm the one who actually gets the game and plays to win. I don't just write code; I build real solutions that work and hit hard. I don't chase "good enough." I chase great, and I deliver—every single time.
+                <span className="highlight">As a developer</span>, I'm not your average dev. I understand the game and I play to win. I don’t just write code I build solutions that work, deliver real impact, and stand out. I don’t settle for "good enough"; I push for great and make sure it happens every time.
               </p>
               <SkillTags>
                 <motion.span
