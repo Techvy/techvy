@@ -6,9 +6,6 @@ import profileImage from '../../assets/main.jpg';
 const About = () => {
   return (
     <AboutSection id="about">
-      <AccentCircle className="accent-circle-1" />
-      <AccentCircle className="accent-circle-2" />
-      
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -73,44 +70,11 @@ I care more about results than buzzwords. That means websites that load fast, bo
 
 const AboutSection = styled.section`
   padding: 100px 0;
-  background-color: rgba(98, 0, 234, 0.03);
   position: relative;
   overflow: hidden;
 `;
 
-const AccentCircle = styled.div`
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.1;
-  background: linear-gradient(45deg, var(--primary-color), var(--primary-hover));
-  filter: blur(60px);
-  z-index: 0;
-  
-  &.accent-circle-1 {
-    width: 300px;
-    height: 300px;
-    top: -100px;
-    left: -150px;
-    animation: float-slow 8s ease-in-out infinite alternate;
-  }
-  
-  &.accent-circle-2 {
-    width: 400px;
-    height: 400px;
-    bottom: -200px;
-    right: -200px;
-    animation: float-slow 10s ease-in-out infinite alternate-reverse;
-  }
-  
-  @keyframes float-slow {
-    0% {
-      transform: translate(0, 0);
-    }
-    100% {
-      transform: translate(50px, 30px);
-    }
-  }
-`;
+
 
 const SectionTitle = styled.h2`
   font-size: 2.5rem;
