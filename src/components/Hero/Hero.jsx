@@ -217,7 +217,7 @@ const Hero = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
-              I build exceptional and accessible digital experiences for the web.
+              I design custom Discord bots that make communities smarter, safer, and way more fun to hang out in.
             </motion.p>
             <ButtonGroup>
               <motion.div
