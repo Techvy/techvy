@@ -179,7 +179,7 @@ const Skills = () => {
               </SkillTags>
               <p className="highlight-text">
                 <span className="highlight-wrapper">
-If you're cool with average, I'm not your guy. But if you want real quality, real results, and a dev who doesn't miss—then yeah, we should talk.
+If you're cool with average, I'm not your guy. But if you want real quality, real results, and a dev who doesn't miss then yeah, we should talk.
                 </span>
               </p>
             </OverviewText>
