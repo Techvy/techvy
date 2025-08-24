@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import Hero from './components/Hero/Hero';
 import About from './components/About/About';
 import Skills from './components/Skills/Skills';
-import { motion, AnimatePresence } from 'framer-motion';
 import styled from 'styled-components';
 
 // Wave divider component
@@ -57,130 +56,17 @@ const WaveContainer = styled.div`
 `;
 
 function App() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate loading time
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
-    <>
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <LoadingScreen
-            key="loading"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <LoadingSpinner>
-              <SpinnerRing></SpinnerRing>
-              <LoadingText>Loading</LoadingText>
-            </LoadingSpinner>
-          </LoadingScreen>
-        ) : (
-          <motion.div
-            key="content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Hero />
-            <About />
-            <Skills />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <Hero />
+      <About />
+      <Skills />
+    </motion.div>
   );
 }
-
-const LoadingScreen = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--background-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-`;
-
-const LoadingSpinner = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
-`;
-
-const SpinnerRing = styled.div`
-  position: relative;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 4px solid transparent;
-    border-top: 4px solid var(--primary-color);
-    border-right: 4px solid var(--accent-color);
-    animation: spin 1.5s linear infinite;
-  }
-  
-  &:after {
-    content: "";
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    border-radius: 50%;
-    border: 4px solid transparent;
-    border-top: 4px solid var(--accent-color);
-    border-left: 4px solid var(--primary-color);
-    animation: spin 1s linear infinite reverse;
-  }
-  
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-`;
-
-const LoadingText = styled.div`
-  font-size: 1.5rem;
-  font-weight: 500;
-  background: linear-gradient(to right, var(--primary-color), var(--accent-color), var(--primary-color));
-  background-size: 200% auto;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: shine 2s linear infinite;
-  letter-spacing: 2px;
-  
-  @keyframes shine {
-    to {
-      background-position: 200% center;
-    }
-  }
-`;
 
 export default App;
